@@ -2,7 +2,8 @@ sqlite3 mobile.db
 
 CREATE TABLE operateurs (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    nom TEXT
+    nom TEXT,
+    code TEXT
 );
 
 CREATE TABLE prefixes (
@@ -53,8 +54,8 @@ CREATE TABLE operations (
 );
 
 
-INSERT INTO operateurs (nom) VALUES ('MVola');
-INSERT INTO operateurs (nom) VALUES ('Airtel Money');
+INSERT INTO operateurs (nom, code) VALUES ('MVola', 'MV');
+INSERT INTO operateurs (nom, code) VALUES ('Airtel Money', 'AM');
 
 INSERT INTO prefixes (prefixe, operateur_id) VALUES ('034', 1);
 INSERT INTO prefixes (prefixe, operateur_id) VALUES ('038', 1);
@@ -75,3 +76,5 @@ INSERT INTO frais (montant_min, montant_max, frais) VALUES
 (50001, 100000, 2000),
 (100001, 500000, 5000),
 (500001, 1000000, 10000);
+
+-- ALTER TABLE operateurs ADD COLUMN code TEXT;
