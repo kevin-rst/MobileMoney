@@ -7,11 +7,11 @@ use CodeIgniter\Router\RouteCollection;
  */
 $routes->get('/', 'AuthController::loginForm');
 $routes->post('/login', 'AuthController::login');
-$routes->post('/logout', 'AuthController::logout');
+$routes->post('/logout', 'AuthController::logout', ['filter' => 'auth']);
 
-$routes->get('/backoffice', 'Home::index');
+$routes->get('/backoffice', 'Home::index', ['filter' => 'role:operateur']);
 
-$routes->group('prefixes', function ($routes) {
+$routes->group('prefixes', ['filter' => 'role:operateur'], function ($routes) {
     $routes->get('', 'PrefixeController::index');
     $routes->get('showForm', 'PrefixeController::showForm');
     $routes->get('showForm/(:num)', 'PrefixeController::showForm/$1');
@@ -19,7 +19,7 @@ $routes->group('prefixes', function ($routes) {
     $routes->get('delete/(:num)', 'PrefixeController::delete/$1');
 });
 
-$routes->group('frais', function ($routes) {
+$routes->group('frais', ['filter' => 'role:operateur'], function ($routes) {
     $routes->get('', 'FraisController::index');
     $routes->get('showForm', 'FraisController::showForm');
     $routes->get('showForm/(:num)', 'FraisController::showForm/$1');
@@ -27,15 +27,15 @@ $routes->group('frais', function ($routes) {
     $routes->get('delete/(:num)', 'FraisController::delete/$1');
 });
 
-$routes->group('statistiques', function ($routes) {
+$routes->group('statistiques', ['filter' => 'role:operateur'], function ($routes) {
     $routes->get('operateurs/gain', 'StatistiqueController::gain');
     $routes->get('clients/solde', 'StatistiqueController::solde');
 });
 
 
-$routes->get('/dashboard', 'ClientController::index');
+$routes->get('/dashboard', 'ClientController::index', ['filter' => 'role:client']);
 
-$routes->group('client', function($routes) {
+$routes->group('client', ['filter' => 'role:client'], function($routes) {
     $routes->get('solde/(:num)', 'ClientController::solde/$1');
 
     $routes->get('operations', 'OperationController::showOperationsForm');

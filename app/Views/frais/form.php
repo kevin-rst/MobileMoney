@@ -12,6 +12,8 @@
 
     <div class="mm-panel__body">
         <form class="mm-form" action="<?= site_url('frais/save') ?>" method="post">
+            <?= csrf_field() ?>
+
             <input type="hidden" name="id" value="<?= isset($frais) ? $frais['id'] : '' ?>">
 
             <div class="mm-field">
