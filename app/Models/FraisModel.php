@@ -40,4 +40,12 @@ class FraisModel extends Model
     {
         return $montant_min < $montant_max;
     }
+
+    public function getFraisByMontant($montant, $typeOperationId)
+    {
+        return $this->where('montant_min <=', $montant)
+                    ->where('montant_max >=', $montant)
+                    ->where('type_operation_id', $typeOperationId)
+                    ->first();
+    }
 }

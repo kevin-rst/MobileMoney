@@ -31,3 +31,14 @@ $routes->group('statistiques', function ($routes) {
     $routes->get('operateurs/gain', 'StatistiqueController::gain');
     $routes->get('clients/solde', 'StatistiqueController::solde');
 });
+
+
+$routes->get('/dashboard', 'ClientController::index');
+
+$routes->group('client', function($routes) {
+    $routes->get('solde/(:num)', 'ClientController::solde/$1');
+
+    $routes->get('operations', 'OperationController::showOperationsForm');
+
+    $routes->post('transaction', 'OperationController::processTransaction');
+});

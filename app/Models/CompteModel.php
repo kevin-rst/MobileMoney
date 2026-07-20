@@ -24,4 +24,9 @@ class CompteModel extends Model
     {
         return $this->selectSum('solde')->first();
     }
+ public function getCompteByClientId($clientId)
+    {
+        return $this->where('client_id', $clientId)->first();
+    }
+
 }
