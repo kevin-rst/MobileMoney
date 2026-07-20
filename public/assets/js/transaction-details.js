@@ -1,19 +1,20 @@
-document.addEventListener("DOMContentLoaded", function() {
-    const type_operation = document.getElementById("type_operation");
-    const client_destination = document.getElementById("client_destination");
+document.addEventListener("DOMContentLoaded", function () {
+    const typeOperation = document.getElementById("type_operation");
+    const clientDestination = document.getElementById("client_destination");
+
+    if (!typeOperation || !clientDestination) {
+        return;
+    }
 
     function verifierTypeOperation() {
-        console.log("Valeur actuelle :", type_operation.value);
+        const isTransfer = typeOperation.value === "1";
+        clientDestination.disabled = !isTransfer;
 
-        if (type_operation.value == 1) {
-            client_destination.disabled = false;
-        } else {
-            client_destination.disabled = true;
-            client_destination.value = "";
+        if (!isTransfer) {
+            clientDestination.value = "";
         }
     }
 
     verifierTypeOperation();
-
-    type_operation.addEventListener("change", verifierTypeOperation);
+    typeOperation.addEventListener("change", verifierTypeOperation);
 });

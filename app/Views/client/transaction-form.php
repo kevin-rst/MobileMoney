@@ -3,26 +3,40 @@
 <?= $this->section('title') ?> Dashboard <?= $this->endSection() ?>
 
 <?= $this->section('content') ?>
+    <section class="mm-panel">
+        <div class="mm-panel__header">
+            <div class="mm-kicker">Transaction</div>
+            <h1>Réaliser une transaction</h1>
+            <p>Le champ du compte destinataire s’active automatiquement pour les transferts.</p>
+        </div>
 
-    <h1>Réaliser une transaction</h1>
+        <div class="mm-panel__body">
+            <form class="mm-form" action="<?= base_url('client/transaction') ?>" method="post">
+                <div class="mm-field">
+                    <label for="montant">Montant</label>
+                    <input type="number" name="montant" id="montant" min="1" step="0.01" required>
+                </div>
 
-    <form action="<?= base_url('client/transaction') ?>" method="post">
-        <label for="montant">Montant :</label>
-        <input type="number" name="montant" id="montant" required>
-        <br><br>
+                <div class="mm-field">
+                    <label for="type_operation">Type d'opération</label>
+                    <select name="type_operation" id="type_operation">
+                        <?php foreach (($types ?? []) as $type): ?>
+                            <option value="<?= $type['id'] ?>"><?= $type['libelle'] ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
 
-        <label for="type_operation">Type d'opération :</label>
-        <select name="type_operation" id="type_operation">
-            <?php foreach ($types as $type): ?>
-                <option value="<?= $type['id'] ?>"><?= $type['libelle'] ?></option>
-            <?php endforeach; ?>
-        </select>
-        <br><br>
-        
-        <label for="client_destination">Compte destinataire :</label>
-        <input type="text" name="compte_destination" id="client_destination" disabled>
+                <div class="mm-field">
+                    <label for="client_destination">Compte destinataire</label>
+                    <input type="text" name="compte_destination" id="client_destination" disabled>
+                    <div class="mm-help">Renseignez ce champ uniquement pour un transfert.</div>
+                </div>
 
-        <button type="submit">Effectuer la transaction</button>
-    </form>
+                <div class="mm-inline-actions">
+                    <button class="mm-btn" type="submit">Effectuer la transaction</button>
+                </div>
+            </form>
+        </div>
+    </section>
 
 <?= $this->endSection() ?>
