@@ -26,6 +26,7 @@
                     <a href="<?= base_url('client/solde/' . (session()->get('client_id') ?? '1') ) ?>">Mon solde</a>
                     <a href="<?= base_url('client/operations') ?>">Transaction</a>
                     <form action="<?= site_url('/logout') ?>" method="post">
+                        <?= csrf_field() ?>
                         <button type="submit">Se déconnecter</button>
                     </form>
                 </nav>

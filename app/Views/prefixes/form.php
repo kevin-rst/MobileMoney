@@ -12,6 +12,8 @@
 
     <div class="mm-panel__body">
         <form class="mm-form" action="<?= site_url('prefixes/save') ?>" method="post">
+            <?= csrf_field() ?>
+
             <input type="hidden" name="id" value="<?= isset($prefixe) ? $prefixe['id'] : '' ?>">
 
             <div class="mm-field">
