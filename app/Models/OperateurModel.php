@@ -14,4 +14,15 @@ class OperateurModel extends Model
     {
         return $this->selectSum('gain')->first();
     }
+
+    public function isProprio($operateurId)
+    {
+        $operateur = $this->find($operateurId);
+        return $operateur && $operateur['proprio'] == 1;
+    }
+
+    public function findAllHorsProprio()
+    {
+        return $this->where('proprio', 0)->findAll();
+    }
 }

@@ -34,9 +34,11 @@ class PrefixeModel extends Model
                     ->findAll();
     }
 
-      public function getOperateurByNumero($numero)
+    public function getOperateurByNumero($numero)
     {
         $prefixe = substr($numero, 0, 3);
         return $this->where('prefixe', $prefixe)->first();
     }
+
+    
 }
