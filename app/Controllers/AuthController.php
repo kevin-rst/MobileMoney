@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Models\ClientModel;
 use App\Models\OperateurModel;
+use App\Models\PrefixeModel;
 
 class AuthController extends BaseController
 {
@@ -18,6 +19,7 @@ class AuthController extends BaseController
 
         $clientModel = new ClientModel();
         $operateurModel = new OperateurModel();
+        $prefixeModel = new PrefixeModel();
 
         $data = [
             'numero_telephone' => $numero_telephone,
@@ -27,9 +29,20 @@ class AuthController extends BaseController
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
 
+        
         $client = $clientModel->where('numero_telephone', $numero_telephone)->first();
+        
+        if ($client) {
+            $operator = $prefixeModel->getOperateurByNumero($numero_telephone);
+            if (!$operateurModel->isProprio($operator['id'])) {
+                return redirect()->back()->withInput()->with('error', 'Numéro de téléphone ou code hors propriété de l\'opérateur.');
+            }
+        } 
 
         $operateur = $operateurModel->where('code', $numero_telephone)->first();
+        if ($operateur && !$operateurModel->isProprio($operateur['id'])) {
+            return redirect()->back()->withInput()->with('error', 'Numéro de téléphone ou code hors propriété de l\'opérateur.');
+        }
 
         if ($client) {
             session()->set('client_id', $client['id']);
