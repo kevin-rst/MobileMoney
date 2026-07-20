@@ -12,4 +12,16 @@ class CompteModel extends Model
     protected $useTimestamps = true;
     protected $createdField = 'date_creation';
     protected $updatedField = '';
+
+    public function findAllDetailed()
+    {
+        return $this->select('comptes.*, clients.nom as client_nom, clients.prenom as client_prenom, clients.numero_telephone as client_numero_telephone')
+                    ->join('clients', 'comptes.client_id = clients.id', 'left')
+                    ->findAll();
+    }
+
+    public function getTotalSolde()
+    {
+        return $this->selectSum('solde')->first();
+    }
 }

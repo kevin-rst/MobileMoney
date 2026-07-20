@@ -5,4 +5,29 @@ use CodeIgniter\Router\RouteCollection;
 /**
  * @var RouteCollection $routes
  */
-$routes->get('/', 'Home::index');
+$routes->get('/', 'AuthController::loginForm');
+$routes->post('/login', 'AuthController::login');
+$routes->post('/logout', 'AuthController::logout');
+
+$routes->get('/backoffice', 'Home::index');
+
+$routes->group('prefixes', function ($routes) {
+    $routes->get('', 'PrefixeController::index');
+    $routes->get('showForm', 'PrefixeController::showForm');
+    $routes->get('showForm/(:num)', 'PrefixeController::showForm/$1');
+    $routes->post('save', 'PrefixeController::save');
+    $routes->get('delete/(:num)', 'PrefixeController::delete/$1');
+});
+
+$routes->group('frais', function ($routes) {
+    $routes->get('', 'FraisController::index');
+    $routes->get('showForm', 'FraisController::showForm');
+    $routes->get('showForm/(:num)', 'FraisController::showForm/$1');
+    $routes->post('save', 'FraisController::save');
+    $routes->get('delete/(:num)', 'FraisController::delete/$1');
+});
+
+$routes->group('statistiques', function ($routes) {
+    $routes->get('operateurs/gain', 'StatistiqueController::gain');
+    $routes->get('clients/solde', 'StatistiqueController::solde');
+});
