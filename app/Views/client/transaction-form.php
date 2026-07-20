@@ -12,6 +12,8 @@
 
         <div class="mm-panel__body">
             <form class="mm-form" action="<?= base_url('client/transaction') ?>" method="post">
+                <?= csrf_field() ?>
+
                 <div class="mm-field">
                     <label for="montant">Montant</label>
                     <input type="number" name="montant" id="montant" min="1" step="0.01" required>
