@@ -38,6 +38,7 @@ CREATE TABLE frais (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     montant_min REAL,
     montant_max REAL,
+    type_operation_id INTEGER,
     frais REAL
 );
 
@@ -70,13 +71,45 @@ INSERT INTO comptes (client_id, solde, date_creation) VALUES (2, 0, '2024-01-01'
 
 INSERT INTO types_operation (libelle) VALUES ('Transfert'), ('Retrait'), ('Depot');
 
-INSERT INTO frais (montant_min, montant_max, frais) VALUES 
-(100, 1000, 50),
-(1001, 10000, 500),
-(10001, 50000, 1000),
-(50001, 100000, 2000),
-(100001, 500000, 5000),
-(500001, 1000000, 10000);
+INSERT INTO frais (montant_min, montant_max, frais, type_operation_id) VALUES 
+(100, 1000, 50, 1),
+(1001, 10000, 500, 1),
+(10001, 50000, 1000, 2),
+(50001, 100000, 2000, 2),
+(100001, 500000, 5000, 3),
+(500001, 1000000, 10000, 3);
 
 -- ALTER TABLE operateurs ADD COLUMN code TEXT;
 -- ALTER TABLE operateurs ADD COLUMN gain REAL;
+CREATE VIEW historique_details AS
+SELECT 
+    o.id AS operation_id,
+    t.libelle AS type_operation,
+    t.id AS type_operation_id,
+
+    cs.id AS compte_source_id,
+    cd.id AS compte_destination_id,
+
+    c1.nom || ' ' || c1.prenom AS client_source,
+    c2.nom || ' ' || c2.prenom AS client_destination,
+
+    o.montant,
+    o.frais,
+    o.date_operation
+
+FROM operations o
+
+JOIN types_operation t 
+    ON o.type_operation_id = t.id
+
+LEFT JOIN comptes cs 
+    ON o.compte_source_id = cs.id
+
+LEFT JOIN comptes cd 
+    ON o.compte_destination_id = cd.id
+
+LEFT JOIN clients c1 
+    ON cs.client_id = c1.id
+
+LEFT JOIN clients c2 
+    ON cd.client_id = c2.id;
