@@ -27,6 +27,7 @@
                     <a href="<?= site_url('/statistiques/clients/solde') ?>">Soldes clients</a>
                     <a href="<?= site_url('/statistiques/operateurs/gain') ?>">Gains opérateurs</a>
                     <form action="<?= site_url('/logout') ?>" method="post">
+                        <?= csrf_field() ?>
                         <button type="submit">Se déconnecter</button>
                     </form>
                 </nav>
