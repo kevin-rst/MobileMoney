@@ -19,6 +19,7 @@
                         <tr>
                             <th>Opérateur</th>
                             <th>Code</th>
+                            <th>Propriété</th>
                             <th>Gain total</th>
                         </tr>
                     </thead>
@@ -27,6 +28,7 @@
                             <tr>
                                 <td><?= $op['nom'] ?></td>
                                 <td><span class="mm-badge mm-badge--ghost"><?= $op['code'] ?></span></td>
+                                <td><span class="mm-badge mm-badge--primary"><?= $op['proprio'] == '1' ? 'Oui' : 'Non' ?></span></td>
                                 <td><span class="mm-badge mm-badge--primary"><?= $op['gain'] ?></span></td>
                             </tr>
                         <?php endforeach; ?>

@@ -4,7 +4,8 @@ CREATE TABLE operateurs (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     nom TEXT,
     code TEXT,
-    gain REAL
+    gain REAL,
+    proprio BOOLEAN
 );
 
 CREATE TABLE prefixes (
@@ -49,22 +50,29 @@ CREATE TABLE operations (
     compte_destination_id INTEGER,
     montant REAL,
     frais REAL,
+    commission REAL,
     date_operation TEXT,
     FOREIGN KEY (type_operation_id) REFERENCES types_operation(id),
     FOREIGN KEY (compte_source_id) REFERENCES comptes(id),
     FOREIGN KEY (compte_destination_id) REFERENCES comptes(id)
 );
 
+CREATE TABLE commissions (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    operateur_id INTEGER,
+    pct_commission REAL,
+    FOREIGN KEY (operateur_id) REFERENCES operateurs(id)
+);
 
-INSERT INTO operateurs (nom, code, gain) VALUES ('MVola', 'MV', 0);
-INSERT INTO operateurs (nom, code, gain) VALUES ('Airtel Money', 'AM', 0);
+INSERT INTO operateurs (nom, code, gain, proprio) VALUES ('MVola', 'MV', 0, 1);
+INSERT INTO operateurs (nom, code, gain, proprio) VALUES ('Airtel Money', 'AM', 0, 0);
 
 INSERT INTO prefixes (prefixe, operateur_id) VALUES ('034', 1);
 INSERT INTO prefixes (prefixe, operateur_id) VALUES ('038', 1);
 INSERT INTO prefixes (prefixe, operateur_id) VALUES ('033', 2);
 
 INSERT INTO clients (nom, prenom, numero_telephone) VALUES ('RST', 'Kevin', '0345259316');
-INSERT INTO clients (nom, prenom, numero_telephone) VALUES ('RAJ', 'Manoa', '0332172098');
+INSERT INTO clients (nom, prenom, numero_telephone) VALUES ('RAJ', 'Manoa', '0382172098');
 
 INSERT INTO comptes (client_id, solde, date_creation) VALUES (1, 0, '2024-01-01');
 INSERT INTO comptes (client_id, solde, date_creation) VALUES (2, 0, '2024-01-01');
@@ -78,6 +86,8 @@ INSERT INTO frais (montant_min, montant_max, frais, type_operation_id) VALUES
 (50001, 100000, 2000, 2),
 (100001, 500000, 5000, 3),
 (500001, 1000000, 10000, 3);
+
+INSERT INTO commissions (operateur_id, pct_commission) VALUES (2, 0.03);
 
 -- ALTER TABLE operateurs ADD COLUMN code TEXT;
 -- ALTER TABLE operateurs ADD COLUMN gain REAL;

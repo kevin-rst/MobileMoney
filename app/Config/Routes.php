@@ -7,7 +7,7 @@ use CodeIgniter\Router\RouteCollection;
  */
 $routes->get('/', 'AuthController::loginForm');
 $routes->post('/login', 'AuthController::login');
-$routes->post('/logout', 'AuthController::logout', ['filter' => 'auth']);
+$routes->post('/logout', 'AuthController::logout');
 
 $routes->get('/backoffice', 'Home::index', ['filter' => 'role:operateur']);
 
@@ -27,8 +27,17 @@ $routes->group('frais', ['filter' => 'role:operateur'], function ($routes) {
     $routes->get('delete/(:num)', 'FraisController::delete/$1');
 });
 
+$routes->group('commissions', ['filter' => 'role:operateur'], function ($routes) {
+    $routes->get('', 'CommissionController::index');
+    $routes->get('showForm', 'CommissionController::showForm');
+    $routes->get('showForm/(:num)', 'CommissionController::showForm/$1');
+    $routes->post('save', 'CommissionController::save');
+    $routes->get('delete/(:num)', 'CommissionController::delete/$1');
+});
+
 $routes->group('statistiques', ['filter' => 'role:operateur'], function ($routes) {
     $routes->get('operateurs/gain', 'StatistiqueController::gain');
+    $routes->get('operateurs/montant', 'StatistiqueController::montant');
     $routes->get('clients/solde', 'StatistiqueController::solde');
 });
 
@@ -41,4 +50,6 @@ $routes->group('client', ['filter' => 'role:client'], function($routes) {
     $routes->get('operations', 'OperationController::showOperationsForm');
 
     $routes->post('transaction', 'OperationController::processTransaction');
+
+    $routes->get('transaction/montant-a-payer', 'OperationController::getMontantAPayer');
 });

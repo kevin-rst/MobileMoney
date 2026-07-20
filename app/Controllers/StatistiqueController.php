@@ -32,4 +32,20 @@ class StatistiqueController extends BaseController
 
         return view('statistiques/clients/solde', ['comptes' => $comptes, 'soldeTotal' => $soldeTotal]);
     }
+
+    public function montant()
+    {
+        $operationModel = new OperationModel();
+        $montantParOperateur = $operationModel->getMontantsParOperateur();
+
+        $totalMontant = array_reduce($montantParOperateur, function ($carry, $item) {
+            return $carry + $item['total_montant'];
+        }, 0);
+
+        $totalCommission = array_reduce($montantParOperateur, function ($carry, $item) {
+            return $carry + $item['total_commission'];
+        }, 0);
+
+        return view('statistiques/operateurs/montant', ['montantParOperateur' => $montantParOperateur, 'totalMontant' => $totalMontant, 'totalCommission' => $totalCommission]);
+    }
 }
