@@ -7,7 +7,16 @@
 </head>
 <body>
     <nav>
-        <a href="<?= site_url('/') ?>">Home</a>
+        <a href="<?= site_url('/backoffice') ?>">Home</a>
+        <a href="<?= site_url('/prefixes') ?>">Préfixes</a>
+        <a href="<?= site_url('/frais') ?>">Frais</a>
+        <a href="<?= site_url('/statistiques/clients/solde') ?>">Comptes des clients</a>
+        <a href="<?= site_url('/statistiques/operateurs/gain') ?>">Gain des opérateurs</a>
+        <div>
+            <form action="<?= site_url('/logout') ?>" method="post">
+                <button type="submit">Se déconnecter</button>
+            </form>
+        </div>
     </nav>
 
     <?php if (session()->getFlashdata('success')) : ?>

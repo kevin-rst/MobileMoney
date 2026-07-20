@@ -38,6 +38,7 @@ CREATE TABLE frais (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     montant_min REAL,
     montant_max REAL,
+    type_operation_id INTEGER,
     frais REAL
 );
 
@@ -70,13 +71,13 @@ INSERT INTO comptes (client_id, solde, date_creation) VALUES (2, 0, '2024-01-01'
 
 INSERT INTO types_operation (libelle) VALUES ('Transfert'), ('Retrait'), ('Depot');
 
-INSERT INTO frais (montant_min, montant_max, frais) VALUES 
-(100, 1000, 50),
-(1001, 10000, 500),
-(10001, 50000, 1000),
-(50001, 100000, 2000),
-(100001, 500000, 5000),
-(500001, 1000000, 10000);
+INSERT INTO frais (montant_min, montant_max, frais, type_operation_id) VALUES 
+(100, 1000, 50, 1),
+(1001, 10000, 500, 1),
+(10001, 50000, 1000, 2),
+(50001, 100000, 2000, 2),
+(100001, 500000, 5000, 3),
+(500001, 1000000, 10000, 3);
 
 -- ALTER TABLE operateurs ADD COLUMN code TEXT;
 -- ALTER TABLE operateurs ADD COLUMN gain REAL;
