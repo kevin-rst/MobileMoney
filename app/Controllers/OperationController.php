@@ -82,7 +82,6 @@ class OperationController extends BaseController
             $compteModel->update($compte_source['id'], ['solde' => $compte_source['solde'] - $data['montant'] - $frais['frais']]);
 
             if ($prefixe) {
-
                 $operateurModel->update($prefixe['operateur_id'], ['gain' => $operateurCible['gain'] + $frais['frais']]);
             }
 
