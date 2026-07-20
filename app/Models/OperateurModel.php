@@ -8,7 +8,7 @@ class OperateurModel extends Model
 {
     protected $table = 'operateurs';
     protected $primaryKey = 'id';
-    protected $allowedFields = ['nom', 'code', 'gain'];
+    protected $allowedFields = ['nom', 'code', 'gain', 'proprio'];
 
     public function getGainTotal()
     {

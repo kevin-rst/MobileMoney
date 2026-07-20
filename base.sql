@@ -4,7 +4,8 @@ CREATE TABLE operateurs (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     nom TEXT,
     code TEXT,
-    gain REAL
+    gain REAL,
+    proprio BOOLEAN
 );
 
 CREATE TABLE prefixes (
