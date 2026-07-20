@@ -39,9 +39,11 @@
                     <small>Si vous renseignez plusieurs numéros, le montant sera divisé équitablement entre chaque destinataire et tous les numéros doivent appartenir au même opérateur.</small>
                 </div>
 
-                <div id="frais-container"></div>
+                <div id="frais-container">
 
-                <div id="montant-a-payer"></div>
+                </div>
+
+                <div id="montant-a-payer" class="mm-payment-info"></div>
 
                 <div class="mm-inline-actions">
                     <button class="mm-btn" id="btn-submit" type="submit">Effectuer la transaction</button>

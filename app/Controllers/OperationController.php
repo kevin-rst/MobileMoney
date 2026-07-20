@@ -22,12 +22,9 @@ class OperationController extends BaseController
     public function getMontantAPayer()
     {
         $montant = $this->request->getGet('montant');
-        $numero = $this->request->getGet('numero');
-        $typeOperationId = $this->request->getGet('type_operation_id');
+        $typeOperationId = $this->request->getGet('type_operation');
         $destinations = $this->request->getGet('destinations');
 
-        $operateurModel = new OperateurModel();
-        $clientModel = new ClientModel();
         $fraisModel = new FraisModel();
 
         $compteCount = 1;
@@ -38,22 +35,13 @@ class OperationController extends BaseController
             }));
         }
 
-        $prefix = $clientModel->isProprio($numero);
-        $proprietaire = $operateurModel->find($prefix['operateur_id']);
         $frais = $fraisModel->getFraisByMontant($montant / max(1, $compteCount), $typeOperationId);
 
         if (!$frais) {
             $frais['frais'] = 0;
         }
-        
-        if ( !$proprietaire['proprio'] ) {
-            $commission = $operateurModel->getOperateurCommission($proprietaire['id']);
-            $commissionAmount = ($montant / max(1, $compteCount)) * $commission;
-            $totalAmount = ($montant / max(1, $compteCount)) + $commissionAmount + $frais['frais'];
-            return $this->response->setJSON(['montant_a_payer' => $totalAmount, 'commission' => $commissionAmount, 'frais' => $frais['frais'], 'nombre_destinataires' => $compteCount]);
-        }
 
-        return $this->response->setJSON(['montant_a_payer' => ($montant / max(1, $compteCount)) + $frais['frais'], 'commission' => 0, 'frais' => $frais['frais'], 'nombre_destinataires' => $compteCount]);
+        return $this->response->setJSON(['montant_a_payer' => (($montant / max(1, $compteCount)) + $frais['frais']) * max(1, $compteCount), 'frais' => $frais['frais'], 'montant' => $montant, 'compteCount' => $compteCount]);
     }
 
     public function processTransaction()
@@ -66,6 +54,8 @@ class OperationController extends BaseController
         $operationModel = new OperationModel();
 
         $data = $this->request->getPost();
+
+        $include_frais = $data['frais'] ?? 0;
         $typeOperation = (int) ($data['type_operation'] ?? 0);
 
         $compteSource = null;
@@ -147,15 +137,20 @@ class OperationController extends BaseController
                 $commission = $operateurModel->getOperateurCommission($operateurDestination['id']);
                 $commissionAmount = $shareAmount * $commission;
 
+                $montant = $shareAmount;
+                if ($include_frais == 0) {
+                    $montant -= $frais['frais'];
+                } 
+
                 $recipientData[] = [
                     'numero' => $recipientNumero,
                     'compte_destination' => $compteDestinationItem,
-                    'montant' => $shareAmount,
+                    'montant' => $montant ,
                     'frais' => $frais['frais'],
                     'commission' => $commissionAmount,
                 ];
 
-                $totalNeeded += $shareAmount + $frais['frais'] + $commissionAmount;
+                $totalNeeded += $montant + $frais['frais'] + $commissionAmount;
             }
 
             if ($compteSource['solde'] < $totalNeeded) {
