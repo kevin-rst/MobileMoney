@@ -31,11 +31,14 @@
                 <div class="mm-field">
                     <label for="client_destination">Compte destinataire</label>
                     <input type="text" name="compte_destination" id="client_destination" disabled>
-                    <div class="mm-help">Renseignez ce champ uniquement pour un transfert.</div>
                 </div>
 
+                <div id="frais-container"></div>
+
+                <div id="montant-a-payer"></div>
+
                 <div class="mm-inline-actions">
-                    <button class="mm-btn" type="submit">Effectuer la transaction</button>
+                    <button class="mm-btn" id="btn-submit" type="submit">Effectuer la transaction</button>
                 </div>
             </form>
         </div>

@@ -14,4 +14,14 @@ class OperateurModel extends Model
     {
         return $this->selectSum('gain')->first();
     }
+
+    public function getOperateurCommission($operateurId)
+    {
+        $commission = $this->db->table('commissions')
+            ->where('operateur_id', $operateurId)
+            ->get()
+            ->getRow();
+
+        return $commission ? $commission->pct_commission : 0;
+    }
 }

@@ -19,6 +19,34 @@ class OperationController extends BaseController
         return view('client/transaction-form', ['types' => $types]);
     }
 
+    public function getMontantAPayer()
+    {
+        $montant = $this->request->getGet('montant');
+        $numero = $this->request->getGet('numero');
+        $typeOperationId = $this->request->getGet('type_operation_id');
+
+        $operateurModel = new OperateurModel();
+        $clientModel = new ClientModel();
+        $fraisModel = new FraisModel();
+
+        $prefix = $clientModel->isProprio($numero);
+        $proprietaire = $operateurModel->find($prefix['operateur_id']);
+        $frais = $fraisModel->getFraisByMontant($montant, $typeOperationId);
+
+        if (!$frais) {
+            $frais['frais'] = 0;
+        }
+        
+        if ( !$proprietaire['proprio'] ) {
+            $commission = $operateurModel->getOperateurCommission($proprietaire['id']);
+            $commissionAmount = $montant * $commission;
+            $totalAmount = $montant + $commissionAmount + $frais['frais'];
+            return $this->response->setJSON(['montant_a_payer' => $totalAmount, 'commission' => $commissionAmount, 'frais' => $frais['frais']]);
+        }
+
+        return $this->response->setJSON(['montant_a_payer' => $montant + $frais['frais'], 'commission' => 0, 'frais' => $frais['frais']]);
+    }
+
     public function processTransaction()
     {
         $compteModel = new CompteModel();
@@ -28,6 +56,8 @@ class OperationController extends BaseController
         $data = $this->request->getPost();
         $compte_source = null;
         $compte_destination = null;
+        
+        // 1->transfert, 2->retrait, 3->depot
 
         if ($data['type_operation'] == 2) {
             $compte_source = $compteModel->getCompteByClientId(session()->get('client_id'));
@@ -35,6 +65,11 @@ class OperationController extends BaseController
             $compte_source = $compteModel->getCompteByClientId(session()->get('client_id'));
             $client_destination = $clientModel->findByNumeroTelephone($data['compte_destination']);
             $compte_destination = $compteModel->getCompteByClientId($client_destination['id']);
+
+            if (!$compte_destination) {
+                return redirect()->back()->withInput()->with('error', 'Le compte destinataire n\'existe pas.');
+            }
+
         } else {
             $compte_destination = $compteModel->getCompteByClientId(session()->get('client_id'));
         }
@@ -56,7 +91,8 @@ class OperationController extends BaseController
             'compte_source_id' => $compte_source ? $compte_source['id'] : null,
             'compte_destination_id' => $compte_destination ? $compte_destination['id'] : null,
             'montant' => $data['montant'],
-            'frais' => $frais ? $frais['frais'] : 0
+            'frais' => $frais ? $frais['frais'] : 0,
+            'commission' => 0,
         ];
 
         if ($prefixe) {
@@ -68,8 +104,17 @@ class OperationController extends BaseController
                 return redirect()->back()->withInput()->with('error', 'Solde insuffisant pour effectuer cette transaction.');
             }
 
-            $compteModel->update($compte_source['id'], ['solde' => $compte_source['solde'] - $data['montant'] - $frais['frais']]);
-            $compteModel->update($compte_destination['id'], ['solde' => $compte_destination['solde'] + $data['montant']]);
+            $prefixeDestination = $prefixeModel->getOperateurByNumero($data['compte_destination']);
+            $operateurDestination = $operateurModel->find($prefixeDestination['operateur_id']);
+
+            $commission = $operateurModel->getOperateurCommission($operateurDestination['id']);
+            $commissionAmount = $data['montant'] * $commission;
+
+            $operationData['commission'] = $commissionAmount;
+            $operationData['montant'] = $data['montant'] + $frais['frais'];
+
+            $compteModel->update($compte_source['id'], ['solde' => $compte_source['solde'] - $data['montant'] - $frais['frais'] - $commissionAmount]);
+            $compteModel->update($compte_destination['id'], ['solde' => $compte_destination['solde'] + $data['montant'] + $frais['frais']]);
 
             if ($prefixe) {
                 $operateurModel->update($prefixe['operateur_id'], ['gain' => $operateurCible['gain'] + $frais['frais']]);

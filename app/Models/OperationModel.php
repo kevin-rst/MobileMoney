@@ -8,7 +8,7 @@ class OperationModel extends Model
 {
     protected $table = 'operations';
     protected $primaryKey = 'id';
-    protected $allowedFields = ['type_operation_id', 'compte_source_id', 'compte_destination_id', 'montant', 'frais', 'date_operation'];
+    protected $allowedFields = ['type_operation_id', 'compte_source_id', 'compte_destination_id', 'montant', 'frais', 'commission'];
 
     protected $useTimestamps = true;
 

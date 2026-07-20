@@ -50,6 +50,7 @@ CREATE TABLE operations (
     compte_destination_id INTEGER,
     montant REAL,
     frais REAL,
+    commission REAL,
     date_operation TEXT,
     FOREIGN KEY (type_operation_id) REFERENCES types_operation(id),
     FOREIGN KEY (compte_source_id) REFERENCES comptes(id),
