@@ -1,0 +1,1 @@
+__ci_last_regenerate|i:1784545620;_ci_previous_url|s:31:"http://localhost:8080/dashboard";client_id|i:1;client_nom|s:3:"RST";client_prenom|s:5:"Kevin";client_numero_telephone|s:10:"0345259316";role|s:6:"client";operateur_id|i:1;operateur_nom|s:5:"MVola";operateur_code|s:2:"MV";success|s:38:"Connexion réussie en tant que client.";__ci_vars|a:1:{s:7:"success";s:3:"old";}
