@@ -34,5 +34,21 @@ Côtés Clients Manoa:
     - frontend:
             - views/client/solde
 
+Cote operateur (Model, Controlleur, View avec Login) Kevin
 
-Cote operateur (Model, Controlleur, View avec Login) Kevin:
+Cote operateur (Kevin):
+
+    - login:
+
+    - gestion des operateurs entrant (filtre si l'operateur est de la campagnie ou non)
+
+    - gestion des clients entrant (filtre si le client vient de la campagnie ou non)
+
+    - Affichage des montants a anvoyer a chaque operateur
+
+Cote client (Manoa):
+
+- modification js: ajout des input type radio + verification montant a paye
+- controller: verification du compte destinataire si appartient a la campagnie (si oui, pas de commission)
+- modification js: ajout de numero multiple
+- controller: insertion de la transaction + verification si les numeros appartiennent a la campagnie

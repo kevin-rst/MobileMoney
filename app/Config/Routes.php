@@ -50,4 +50,6 @@ $routes->group('client', ['filter' => 'role:client'], function($routes) {
     $routes->get('operations', 'OperationController::showOperationsForm');
 
     $routes->post('transaction', 'OperationController::processTransaction');
+
+    $routes->get('transaction/montant-a-payer', 'OperationController::getMontantAPayer');
 });

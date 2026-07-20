@@ -37,4 +37,12 @@ class ClientModel extends Model
     {
         return $this->where('numero_telephone', $numeroTelephone)->first();
     }
+
+    public function isProprio($numeroTelephone)
+    {
+        $prefixeModel = new PrefixeModel();
+        $operateur = $prefixeModel->getOperateurByNumero($numeroTelephone);
+
+        return $operateur;
+    }
 }
