@@ -1731,3 +1731,21 @@ DEBUG - 2026-07-20 18:33:29 --> Session: Class initialized using 'CodeIgniter\Se
 INFO - 2026-07-20 18:33:30 --> CSRF token verified.
 DEBUG - 2026-07-20 18:33:30 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
 DEBUG - 2026-07-20 18:33:30 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-07-20 18:38:05 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-07-20 18:38:05 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2026-07-20 18:38:08 --> CSRF token verified.
+DEBUG - 2026-07-20 18:38:08 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-07-20 18:38:08 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-07-20 18:38:09 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-07-20 18:38:16 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2026-07-20 18:38:16 --> TypeError: Unsupported operand types: string / int
+[Method: GET, Route: client/transaction/montant-a-payer]
+in APPPATH/Controllers/OperationController.php on line 38.
+ 1 SYSTEMPATH/CodeIgniter.php(951): App\Controllers\OperationController->getMontantAPayer()
+ 2 SYSTEMPATH/CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController()
+ 3 SYSTEMPATH/CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest()
+ 4 SYSTEMPATH/Boot.php(417): CodeIgniter\CodeIgniter->run()
+ 5 SYSTEMPATH/Boot.php(68): CodeIgniter\Boot::runCodeIgniter()
+ 6 FCPATH/index.php(59): CodeIgniter\Boot::bootWeb()
+ 7 SYSTEMPATH/rewrite.php(44): require_once('/home/kevin/Documents/Web/Perso/MobileMoney/public/index.php')
+DEBUG - 2026-07-20 18:38:22 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
