@@ -43,6 +43,7 @@ class OperationController extends BaseController
         $prefixeModel = new PrefixeModel();
 
         $prefixe = $prefixeModel->getOperateurByNumero(session()->get('client_numero_telephone'));
+        
         $frais = $fraisModel->getFraisByMontant($data['montant'], $data['type_operation']);
 
         if (!$frais) {
