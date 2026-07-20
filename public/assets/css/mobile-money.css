@@ -614,6 +614,65 @@ table.mm-table tbody tr:hover {
     border-radius: 8px;
 }
 
+.mm-radio-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: .75rem;
+}
+
+.mm-radio {
+    display: inline-flex;
+    align-items: center;
+    gap: .6rem;
+    padding: .8rem 1rem;
+    border: 1.5px solid var(--mm-border);
+    background: var(--mm-bg-soft);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all var(--mm-transition);
+    user-select: none;
+}
+
+.mm-radio:hover {
+    border-color: var(--mm-primary);
+    background: var(--mm-primary-light);
+}
+
+.mm-radio input[type="radio"] {
+    accent-color: var(--mm-primary);
+    width: 18px;
+    height: 18px;
+    margin: 0;
+    cursor: pointer;
+}
+
+.mm-radio span {
+    font-weight: 500;
+}
+
+.mm-radio input[type="radio"]:checked + span {
+    color: var(--mm-primary);
+    font-weight: 600;
+}
+
+.mm-radio-title {
+    display: block;
+    margin-bottom: .6rem;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.mm-payment-info {
+    margin-top: 1rem;
+    padding: 1rem;
+    border-radius: 8px;
+    border: 1px solid var(--mm-primary-light);
+    background: var(--mm-primary-light);
+    color: var(--mm-primary-strong);
+    font-weight: 600;
+}
+
 /* ============================================
    RESPONSIVE
    ============================================ */
@@ -695,3 +754,4 @@ table.mm-table tbody tr:hover {
         font-size: 0.82rem;
     }
 }
+

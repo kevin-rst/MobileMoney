@@ -73,19 +73,29 @@ INSERT INTO prefixes (prefixe, operateur_id) VALUES ('033', 2);
 
 INSERT INTO clients (nom, prenom, numero_telephone) VALUES ('RST', 'Kevin', '0345259316');
 INSERT INTO clients (nom, prenom, numero_telephone) VALUES ('RAJ', 'Manoa', '0382172098');
+INSERT INTO clients (nom, prenom, numero_telephone) VALUES ('RAK', 'Xavier', '0330500312');
+INSERT INTO clients (nom, prenom, numero_telephone) VALUES ('RAJ', 'Razafy', '0345259317');
 
 INSERT INTO comptes (client_id, solde, date_creation) VALUES (1, 0, '2024-01-01');
 INSERT INTO comptes (client_id, solde, date_creation) VALUES (2, 0, '2024-01-01');
+INSERT INTO comptes (client_id, solde, date_creation) VALUES (3, 0, '2024-01-01');
+INSERT INTO comptes (client_id, solde, date_creation) VALUES (4, 0, '2024-01-01');
 
 INSERT INTO types_operation (libelle) VALUES ('Transfert'), ('Retrait'), ('Depot');
 
 INSERT INTO frais (montant_min, montant_max, frais, type_operation_id) VALUES 
-(100, 1000, 50, 1),
-(1001, 10000, 500, 1),
-(10001, 50000, 1000, 2),
-(50001, 100000, 2000, 2),
-(100001, 500000, 5000, 3),
-(500001, 1000000, 10000, 3);
+(0, 10000, 500, 1),
+(10001, 50000, 1000, 1),
+(50001, 100000, 1500, 1),
+(100001, 200000, 2000, 1),
+(200001, 500000, 3000, 1),
+(500001, 1000000, 4000, 1),
+(0, 10000, 300, 2),
+(10001, 50000, 800, 2),
+(50001, 100000, 1200, 2),
+(100001, 200000, 1500, 2),
+(200001, 500000, 2500, 2),
+(500001, 1000000, 3500, 2);
 
 INSERT INTO commissions (operateur_id, pct_commission) VALUES (2, 0.03);
 
