@@ -12,4 +12,9 @@ class CompteModel extends Model
     protected $useTimestamps = true;
     protected $createdField = 'date_creation';
     protected $updatedField = '';
+
+    public function getCompteByClientId($clientId)
+    {
+        return $this->where('client_id', $clientId)->first();
+    }
 }

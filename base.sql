@@ -80,3 +80,22 @@ INSERT INTO frais (montant_min, montant_max, frais) VALUES
 
 -- ALTER TABLE operateurs ADD COLUMN code TEXT;
 -- ALTER TABLE operateurs ADD COLUMN gain REAL;
+
+CREATE VIEW historique_details AS
+SELECT 
+    o.id AS operation_id,
+    t.libelle AS type_operation,
+    t.id AS type_operation_id,
+    cs.id AS compte_source_id,
+    cd.id AS compte_destination_id,
+    c1.nom || ' ' || c1.prenom AS client_source,
+    c2.nom || ' ' || c2.prenom AS client_destination,
+    o.montant,
+    o.frais,
+    o.date_operation
+FROM operations o
+JOIN types_operation t ON o.type_operation_id = t.id
+JOIN comptes cs ON o.compte_source_id = cs.id
+JOIN comptes cd ON o.compte_destination_id = cd.id
+JOIN clients c1 ON cs.client_id = c1.id
+JOIN clients c2 ON cd.client_id = c2.id;

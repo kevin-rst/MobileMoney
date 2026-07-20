@@ -14,4 +14,5 @@ class OperationModel extends Model
 
     protected $createdField = 'date_operation';
     protected $updatedField = '';
+
 }
