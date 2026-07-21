@@ -45,6 +45,7 @@
                     <span><?= session()->getFlashdata('error') ?></span>
                 </div>
             <?php endif; ?>
+            <br>
 
             <?= $this->renderSection('content') ?>
         </main>

@@ -41,12 +41,13 @@ class OperationModel extends Model
 
     public function getMontantsParOperateur()
 {
-    return $this->select('operateurs.nom AS operateur, SUM(operations.montant) AS total_montant, SUM(operations.commission) AS total_commission')
+    return $this->select('operateurs.nom AS operateur, SUM(operations.montant) - SUM(operations.frais) - SUM(operations.commission) AS total_montant, SUM(operations.commission) AS total_commission')
                 ->join('comptes', 'operations.compte_destination_id = comptes.id')
                 ->join('clients', 'comptes.client_id = clients.id')
                 ->join('prefixes', 'SUBSTR(clients.numero_telephone, 1, 3) = prefixes.prefixe')
                 ->join('operateurs', 'prefixes.operateur_id = operateurs.id')
                 ->where('operations.type_operation_id', 1)
+                ->where('operateurs.proprio', 0)
                 ->groupBy('operateurs.id')
                 ->orderBy('operateurs.nom', 'ASC')
                 ->findAll();

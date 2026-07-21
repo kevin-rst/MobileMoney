@@ -24,9 +24,9 @@
                     <a class="mm-nav__primary" href="<?= site_url('/backoffice') ?>">Accueil</a>
                     <a href="<?= site_url('/prefixes') ?>">Préfixes</a>
                     <a href="<?= site_url('/frais') ?>">Frais</a>
-                    <a href="<?= site_url('/commissions') ?>">Commissions opérateurs</a>
-                    <a href="<?= site_url('/statistiques/clients/solde') ?>">Soldes clients</a>
-                    <a href="<?= site_url('/statistiques/operateurs/gain') ?>">Gains opérateurs</a>
+                    <a href="<?= site_url('/commissions') ?>">Commissions</a>
+                    <a href="<?= site_url('/statistiques/clients/solde') ?>">Soldes</a>
+                    <a href="<?= site_url('/statistiques/operateurs/gain') ?>">Gains</a>
                     <a href="<?= site_url('/statistiques/operateurs/montant') ?>">Montants</a>
                     <form action="<?= site_url('/logout') ?>" method="post">
                         <?= csrf_field() ?>
@@ -48,6 +48,7 @@
                     <span><?= session()->getFlashdata('error') ?></span>
                 </div>
             <?php endif; ?>
+            <br>
 
             <?= $this->renderSection('content') ?>
         </main>
