@@ -55,8 +55,14 @@
 - modification js: ajout de numero multiple
 - controller: insertion de la transaction + verification si les numeros appartiennent a la campagnie
 
-promotion % frais de tranfsert meme op 
+promotion % frais de tranfsert meme op
 
 ex : 10 -> 10% mihena le frais de tramsfert mankany any @meme op (na tranche inona na tranche inona)
 
 pourcentage anaty base
+
+Notion: epargne => pour chaque client izy no misafidy pct epargner-na
+
+page: izy misafidy ny pct (ex: 20%)
+
+rehefa misy transfert tonga aty amiko dia ny 20% any amn epargne dia ny 80% any aminy compte principale.

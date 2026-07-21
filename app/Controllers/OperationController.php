@@ -4,6 +4,8 @@ namespace App\Controllers;
 use App\Models\TypeOperation;
 use App\Models\CompteModel;
 use App\Models\ClientModel;
+use App\Models\CompteEpargne;
+use App\Models\EpargneModel;
 use App\Models\FraisModel;
 use App\Models\OperateurModel;
 use App\Models\OperationModel;
@@ -90,6 +92,8 @@ class OperationController extends BaseController
         $prefixeModel = new PrefixeModel();
         $operationModel = new OperationModel();
         $promotionModel = new PromotionModel();
+        $epargneModel = new EpargneModel();
+        $compteEpargneModel = new CompteEpargne();
 
         $data = $this->request->getPost();
 
@@ -167,6 +171,11 @@ class OperationController extends BaseController
                 $shareAmount = (float) $splitAmounts[$index];
                 $frais = $fraisModel->getFraisByMontant($shareAmount, $typeOperation);
                 $fraisRetrait = $fraisModel->getFraisByMontant($shareAmount, 2);
+                $epargne = $epargneModel->findByIdClient($clientDestination['id']);
+
+                if (!$epargne) {
+                    $epargne = ['pct_epargne' => 0];
+                }
 
                 if (!$frais) {
                     $frais = ['frais' => 0];
@@ -197,10 +206,11 @@ class OperationController extends BaseController
                 $recipientData[] = [
                     'numero' => $recipientNumero,
                     'compte_destination' => $compteDestinationItem,
-                    'montant' => $montant ,
+                    'montant' => $montant,
                     'frais' => $frais['frais'],
                     'frais_retrait' => $fraisRetrait['frais'],
                     'commission' => $commissionAmount,
+                    'montant_epargne' => $montant*$epargne['pct_epargne'],
                 ];
 
                 $totalNeeded += $montant + $frais['frais'] + $commissionAmount;
@@ -212,10 +222,18 @@ class OperationController extends BaseController
 
             foreach ($recipientData as $detail) {
                 $updatedSourceBalance = $compteSource['solde'] - $detail['montant'] - $detail['frais'] - $detail['frais_retrait'] - $detail['commission'];
-                $updatedDestinationBalance = $detail['compte_destination']['solde'] + $detail['montant'] + $detail['frais_retrait'];
+                $updatedDestinationBalance = $detail['compte_destination']['solde'] + $detail['montant'] - $detail['montant_epargne'] + $detail['frais_retrait'];
+                $compte_epargne = $compteEpargneModel->findByIdCompte($detail['compte_destination']['id']);
 
                 $compteModel->update($compteSource['id'], ['solde' => $updatedSourceBalance]);
                 $compteModel->update($detail['compte_destination']['id'], ['solde' => $updatedDestinationBalance]);
+
+                $data_epargne = [
+                    'solde_epargne' => $detail['montant_epargne'],
+                    'compte_id' => $compte_epargne['id'],
+                ];
+
+                $compteEpargneModel->insert($data_epargne);
 
                 $compteSource['solde'] = $updatedSourceBalance;
                 $detail['compte_destination']['solde'] = $updatedDestinationBalance;
