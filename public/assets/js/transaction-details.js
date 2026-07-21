@@ -54,8 +54,12 @@ document.addEventListener("DOMContentLoaded", function () {
                     fetch(`transaction/montant-a-payer?montant=${encodeURIComponent(montant)}&type_operation=${encodeURIComponent(typeOperation.value)}&numero=${encodeURIComponent(document.getElementById("client_destination").value)}&destinations=${encodeURIComponent(document.getElementById('compte_destinations').value)}`)
                         .then(response => response.json())
                         .then(data => {
-                            document.getElementById("montant-a-payer").textContent =
-                                "Montant à payer (avec frais) : " + ((data && data.montant_a_payer) ? data.montant_a_payer.toFixed(2) : 0);
+                            if (data.error) {
+                                document.getElementById("montant-a-payer").textContent = "Erreur: " + data.error;
+                            } else {
+                                document.getElementById("montant-a-payer").textContent =
+                                    "Montant à payer (avec frais) : " + data.montant_a_payer.toFixed(2);
+                            }
                         });
                 } else {
                     document.getElementById("montant-a-payer").innerHTML = "";
