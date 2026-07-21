@@ -24,24 +24,60 @@ class OperationController extends BaseController
         $montant = $this->request->getGet('montant');
         $typeOperationId = $this->request->getGet('type_operation');
         $destinations = $this->request->getGet('destinations');
+        $numero = $this->request->getGet('numero');
 
         $fraisModel = new FraisModel();
+        $prefixeModel = new PrefixeModel();
+        $operateurModel = new OperateurModel();
 
         $compteCount = 1;
-        if (!empty($destinations)) {
-            $rawDestinations = preg_split('/[\r\n,;]+/', trim($destinations));
-            $compteCount = count(array_filter($rawDestinations, static function ($value) {
-                return trim($value) !== '';
-            }));
+        $rawDestinations = [];
+
+        if ($destinations && $numero) {
+            return $this->response->setJSON(['montant_a_payer' => 0, 'error' => 'Veuillez fournir au moins un numéro.']);
         }
 
+        if (!empty($destinations)) {
+            $rawDestinations = preg_split('/[\r\n,;]+/', trim($destinations));
+        } elseif (!empty($numero)) {
+            $rawDestinations[] = trim($numero);
+        }
+
+
+        $compteCount = count(array_filter($rawDestinations, static function ($value) {
+            return trim($value) !== '';
+        }));
+
+        $recipientOperators = [];
+        foreach ($rawDestinations as $recipientNumero) {
+            $prefixeDestination = $prefixeModel->getOperateurByNumero($recipientNumero);
+            if (!$prefixeDestination) {
+                return $this->response->setJSON(['montant_a_payer' => 0, 'error' => 'Opérateur non trouvé pour le numéro: ' . $recipientNumero]);
+            }
+            $recipientOperators[] = $prefixeDestination['operateur_id'];
+        }
+
+        if (count(array_unique($recipientOperators)) > 1) {
+            return $this->response->setJSON(['montant_a_payer' => 0, 'error' => 'Les destinataires doivent appartenir au même opérateur.']);
+        }
+         
+        $prefixe = $prefixeModel->getOperateurByNumero($rawDestinations[0] ?? $numero);
+        $operateur = $operateurModel->find($prefixe['operateur_id'] ?? null);
+        $commission = $operateur ? $operateurModel->getOperateurCommission($operateur['id']) : 0;
+        $commissionAmount = $commission * ($montant / max(1, $compteCount));
+
         $frais = $fraisModel->getFraisByMontant($montant / max(1, $compteCount), $typeOperationId);
+        $fraisRetrait = $fraisModel->getFraisByMontant($montant / max(1, $compteCount), 2);
 
         if (!$frais) {
             $frais['frais'] = 0;
         }
 
-        return $this->response->setJSON(['montant_a_payer' => (($montant / max(1, $compteCount)) + $frais['frais']) * max(1, $compteCount), 'frais' => $frais['frais'], 'montant' => $montant, 'compteCount' => $compteCount]);
+        if (!$fraisRetrait) {
+            $fraisRetrait['frais'] = 0;
+        }
+
+        return $this->response->setJSON(['montant_a_payer' => (($montant / max(1, $compteCount)) + $frais['frais'] + $fraisRetrait['frais'] + $commissionAmount) * max(1, $compteCount), 'success' => 'Montant calculé avec succès.']);
     }
 
     public function processTransaction()
@@ -128,8 +164,14 @@ class OperationController extends BaseController
 
                 $shareAmount = (float) $splitAmounts[$index];
                 $frais = $fraisModel->getFraisByMontant($shareAmount, $typeOperation);
+                $fraisRetrait = $fraisModel->getFraisByMontant($shareAmount, 2);
+
                 if (!$frais) {
                     $frais = ['frais' => 0];
+                }
+
+                if (!$fraisRetrait) {
+                    $fraisRetrait = ['frais' => 0];
                 }
 
                 $prefixeDestination = $prefixeModel->getOperateurByNumero($recipientNumero);
@@ -139,7 +181,7 @@ class OperationController extends BaseController
 
                 $montant = $shareAmount;
                 if ($include_frais == 0) {
-                    $montant -= $frais['frais'];
+                    $montant -= $fraisRetrait['frais'];
                 }
 
                 $recipientData[] = [
@@ -147,6 +189,7 @@ class OperationController extends BaseController
                     'compte_destination' => $compteDestinationItem,
                     'montant' => $montant ,
                     'frais' => $frais['frais'],
+                    'frais_retrait' => $fraisRetrait['frais'],
                     'commission' => $commissionAmount,
                 ];
 
@@ -158,8 +201,8 @@ class OperationController extends BaseController
             }
 
             foreach ($recipientData as $detail) {
-                $updatedSourceBalance = $compteSource['solde'] - $detail['montant'] - $detail['frais'] - $detail['commission'];
-                $updatedDestinationBalance = $detail['compte_destination']['solde'] + $detail['montant'] + $detail['frais'];
+                $updatedSourceBalance = $compteSource['solde'] - $detail['montant'] - $detail['frais'] - $detail['frais_retrait'] - $detail['commission'];
+                $updatedDestinationBalance = $detail['compte_destination']['solde'] + $detail['montant'] + $detail['frais_retrait'];
 
                 $compteModel->update($compteSource['id'], ['solde' => $updatedSourceBalance]);
                 $compteModel->update($detail['compte_destination']['id'], ['solde' => $updatedDestinationBalance]);
@@ -176,7 +219,7 @@ class OperationController extends BaseController
                     'type_operation_id' => $typeOperation,
                     'compte_source_id' => $compteSource['id'],
                     'compte_destination_id' => $detail['compte_destination']['id'],
-                    'montant' => $detail['montant'] + $detail['frais'] + $detail['commission'],
+                    'montant' => $detail['montant'] + $detail['frais'] + $detail['commission'] + $detail['frais_retrait'],
                     'frais' => $detail['frais'],
                     'commission' => $detail['commission'],
                 ]);
