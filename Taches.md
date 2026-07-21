@@ -43,9 +43,9 @@
 ### Cote operateur (Kevin):
 
 - login:
+
   - gestion des operateurs entrant (filtre si l'operateur est de la campagnie ou non)
   - gestion des clients entrant (filtre si le client vient de la campagnie ou non)
-
 - Affichage des montants a anvoyer a chaque operateur
 
 ### Cote client (Manoa):
@@ -54,3 +54,9 @@
 - controller: verification du compte destinataire si appartient a la campagnie (si oui, pas de commission)
 - modification js: ajout de numero multiple
 - controller: insertion de la transaction + verification si les numeros appartiennent a la campagnie
+
+promotion % frais de tranfsert meme op 
+
+ex : 10 -> 10% mihena le frais de tramsfert mankany any @meme op (na tranche inona na tranche inona)
+
+pourcentage anaty base

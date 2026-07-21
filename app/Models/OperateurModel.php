@@ -25,6 +25,10 @@ class OperateurModel extends Model
     {
         return $this->where('proprio', 0)->findAll();
     }
+    public function findAllProprio()
+    {
+        return $this->where('proprio', 1)->findAll();
+    }
 public function getOperateurCommission($operateurId)
     {
         $commission = $this->db->table('commissions')
