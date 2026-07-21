@@ -140,7 +140,7 @@ class OperationController extends BaseController
                 $montant = $shareAmount;
                 if ($include_frais == 0) {
                     $montant -= $frais['frais'];
-                } 
+                }
 
                 $recipientData[] = [
                     'numero' => $recipientNumero,
@@ -176,7 +176,7 @@ class OperationController extends BaseController
                     'type_operation_id' => $typeOperation,
                     'compte_source_id' => $compteSource['id'],
                     'compte_destination_id' => $detail['compte_destination']['id'],
-                    'montant' => $detail['montant'] + $detail['frais'],
+                    'montant' => $detail['montant'] + $detail['frais'] + $detail['commission'],
                     'frais' => $detail['frais'],
                     'commission' => $detail['commission'],
                 ]);

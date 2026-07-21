@@ -22,7 +22,7 @@
                             <th>Id</th>
                             <th>Commission</th>
                             <th>Opérateur</th>
-                            <th>Propriété</th>
+                            <th>Propriétaire</th>
                             <th colspan="2">Actions</th>
                         </tr>
                     </thead>

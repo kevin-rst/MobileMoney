@@ -99,8 +99,6 @@ INSERT INTO frais (montant_min, montant_max, frais, type_operation_id) VALUES
 
 INSERT INTO commissions (operateur_id, pct_commission) VALUES (2, 0.03);
 
--- ALTER TABLE operateurs ADD COLUMN code TEXT;
--- ALTER TABLE operateurs ADD COLUMN gain REAL;
 CREATE VIEW historique_details AS
 SELECT 
     o.id AS operation_id,
@@ -115,6 +113,7 @@ SELECT
 
     o.montant,
     o.frais,
+    o.commission,
     o.date_operation
 
 FROM operations o
