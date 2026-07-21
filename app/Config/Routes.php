@@ -52,6 +52,12 @@ $routes->group('statistiques', ['filter' => 'role:operateur'], function ($routes
 
 $routes->get('/dashboard', 'ClientController::index', ['filter' => 'role:client']);
 
+
+$routes->group('epargne', ['filter' => 'role:client'], function($routes) {
+    $routes->get('showForm', 'EpargneController::showForm');
+    $routes->post('inserer', 'EpargneController::saveEpargne');
+});
+
 $routes->group('client', ['filter' => 'role:client'], function($routes) {
     $routes->get('solde/(:num)', 'ClientController::solde/$1');
 

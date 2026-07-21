@@ -64,6 +64,19 @@ CREATE TABLE promotions (
     FOREIGN KEY (operateur_id) REFERENCES operateurs (id)
 );
 
+CREATE TABLE epargnes (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    pct_epargne REAL,
+    client_id INTEGER,
+    FOREIGN KEY (client_id) REFERENCES clients(id)
+);
+
+CREATE TABLE comptes_epargne (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    solde_epargne REAL,
+    compte_id INTEGER,
+    FOREIGN KEY (compte_id) REFERENCES comptes(id)
+);
 
 CREATE TABLE commissions (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
