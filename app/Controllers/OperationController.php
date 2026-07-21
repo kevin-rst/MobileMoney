@@ -8,6 +8,7 @@ use App\Models\FraisModel;
 use App\Models\OperateurModel;
 use App\Models\OperationModel;
 use App\Models\PrefixeModel;
+use App\Models\PromotionModel;
 
 class OperationController extends BaseController
 {
@@ -88,6 +89,7 @@ class OperationController extends BaseController
         $operateurModel = new OperateurModel();
         $prefixeModel = new PrefixeModel();
         $operationModel = new OperationModel();
+        $promotionModel = new PromotionModel();
 
         $data = $this->request->getPost();
 
@@ -178,6 +180,11 @@ class OperationController extends BaseController
                 $operateurDestination = $operateurModel->find($prefixeDestination['operateur_id']);
                 $commission = $operateurModel->getOperateurCommission($operateurDestination['id']);
                 $commissionAmount = $shareAmount * $commission;
+
+                if ($operateurCible['id'] == $operateurDestination['id']) {
+                    $promotion = $promotionModel->findByOperateurId($operateurCible['id'])['pct_promotion'];
+                    $frais['frais'] = $frais['frais'] - ($frais['frais'] * $promotion);
+                }
 
                 $montant = $shareAmount;
                 if ($include_frais == 0) {

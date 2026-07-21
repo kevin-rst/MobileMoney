@@ -35,6 +35,14 @@ $routes->group('commissions', ['filter' => 'role:operateur'], function ($routes)
     $routes->get('delete/(:num)', 'CommissionController::delete/$1');
 });
 
+$routes->group('promotions', ['filter' => 'role:operateur'], function ($routes) {
+    $routes->get('', 'PromotionController::index');
+    $routes->get('showForm', 'PromotionController::showForm');
+    $routes->get('showForm/(:num)', 'PromotionController::showForm/$1');
+    $routes->post('save', 'PromotionController::save');
+    $routes->get('delete/(:num)', 'PromotionController::delete/$1');
+});
+
 $routes->group('statistiques', ['filter' => 'role:operateur'], function ($routes) {
     $routes->get('operateurs/gain', 'StatistiqueController::gain');
     $routes->get('operateurs/montant', 'StatistiqueController::montant');

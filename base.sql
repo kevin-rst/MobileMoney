@@ -57,6 +57,14 @@ CREATE TABLE operations (
     FOREIGN KEY (compte_destination_id) REFERENCES comptes(id)
 );
 
+CREATE TABLE promotions (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    pct_promotion REAL,
+    operateur_id INTEGER,
+    FOREIGN KEY (operateur_id) REFERENCES operateurs (id)
+);
+
+
 CREATE TABLE commissions (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     operateur_id INTEGER,
@@ -98,6 +106,8 @@ INSERT INTO frais (montant_min, montant_max, frais, type_operation_id) VALUES
 (500001, 1000000, 3500, 2);
 
 INSERT INTO commissions (operateur_id, pct_commission) VALUES (2, 0.03);
+
+INSERT INTO promotions (pct_promotion, operateur_id) VALUES (0.1, 1);
 
 CREATE VIEW historique_details AS
 SELECT 
