@@ -19,7 +19,7 @@
                         <tr>
                             <th>Opérateur</th>
                             <th>Code</th>
-                            <th>Propriété</th>
+                            <th>Propriétaire</th>
                             <th>Gain total</th>
                         </tr>
                     </thead>

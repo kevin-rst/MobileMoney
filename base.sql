@@ -113,6 +113,7 @@ SELECT
 
     o.montant,
     o.frais,
+    o.commission,
     o.date_operation
 
 FROM operations o
