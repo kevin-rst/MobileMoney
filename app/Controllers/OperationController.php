@@ -33,6 +33,8 @@ class OperationController extends BaseController
         $proprietaire = $operateurModel->find($prefix['operateur_id']);
         $frais = $fraisModel->getFraisByMontant($montant, $typeOperationId);
 
+        dd($frais);
+
         if (!$frais) {
             $frais['frais'] = 0;
         }
@@ -107,18 +109,23 @@ class OperationController extends BaseController
             $prefixeDestination = $prefixeModel->getOperateurByNumero($data['compte_destination']);
             $operateurDestination = $operateurModel->find($prefixeDestination['operateur_id']);
 
-            $commission = $operateurModel->getOperateurCommission($operateurDestination['id']);
-            $commissionAmount = $data['montant'] * $commission;
+            if ($operateurDestination['proprio']) {
+                $commissionAmount = 0;
+            } else {
+                $commission = $operateurModel->getOperateurCommission($operateurDestination['id']);
+                $commissionAmount = $data['montant'] * $commission;
+            }
 
             $operationData['commission'] = $commissionAmount;
             $operationData['montant'] = $data['montant'] + $frais['frais'];
 
-            $compteModel->update($compte_source['id'], ['solde' => $compte_source['solde'] - $data['montant'] - $frais['frais'] - $commissionAmount]);
+            $compteModel->update($compte_source['id'], ['solde' => $compte_source['solde'] - ($data['montant'] + $frais['frais'] + $commissionAmount)]);
             $compteModel->update($compte_destination['id'], ['solde' => $compte_destination['solde'] + $data['montant'] + $frais['frais']]);
 
             if ($prefixe) {
                 $operateurModel->update($prefixe['operateur_id'], ['gain' => $operateurCible['gain'] + $frais['frais']]);
             }
+
         } elseif($data['type_operation'] == 2) {
             if ($compte_source['solde'] < $data['montant'] + $frais['frais']) {
                 return redirect()->back()->withInput()->with('error', 'Solde insuffisant pour effectuer cette transaction.');

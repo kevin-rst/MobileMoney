@@ -73,9 +73,15 @@ INSERT INTO prefixes (prefixe, operateur_id) VALUES ('033', 2);
 
 INSERT INTO clients (nom, prenom, numero_telephone) VALUES ('RST', 'Kevin', '0345259316');
 INSERT INTO clients (nom, prenom, numero_telephone) VALUES ('RAJ', 'Manoa', '0382172098');
+INSERT INTO clients (nom, prenom, numero_telephone) VALUES ('RAZAF', 'Inayah', '0380000000');
+INSERT INTO clients (nom, prenom, numero_telephone) VALUES ('RAZ', 'Mael', '0340000000');
+INSERT INTO clients (nom, prenom, numero_telephone) VALUES ('RAN', 'Maelis', '0330276134');
 
 INSERT INTO comptes (client_id, solde, date_creation) VALUES (1, 0, '2024-01-01');
 INSERT INTO comptes (client_id, solde, date_creation) VALUES (2, 0, '2024-01-01');
+INSERT INTO comptes (client_id, solde, date_creation) VALUES (3, 0, '2024-01-01');
+INSERT INTO comptes (client_id, solde, date_creation) VALUES (4, 0, '2024-01-01');
+INSERT INTO comptes (client_id, solde, date_creation) VALUES (5, 0, '2024-01-01');
 
 INSERT INTO types_operation (libelle) VALUES ('Transfert'), ('Retrait'), ('Depot');
 

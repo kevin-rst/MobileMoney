@@ -1,81 +1,129 @@
+function addDestinationRow() {
+
+    const container = document.getElementById("destination-field");
+
+    const row = document.createElement("div");
+    row.classList.add("destination-row");
+
+    const label = document.createElement("label");
+    label.textContent = "Compte destinataire : ";
+
+    const input = document.createElement("input");
+    input.type = "text";
+    input.name = "compte_destination[]";
+
+    const removeButton = document.createElement("button");
+    removeButton.type = "button";
+    removeButton.textContent = "-";
+
+    removeButton.addEventListener("click", function () {
+        row.remove();
+    });
+
+    label.appendChild(input);
+    row.appendChild(label);
+    row.appendChild(removeButton);
+
+    container.appendChild(row);
+}
+
 document.addEventListener("DOMContentLoaded", function () {
+
     const typeOperation = document.getElementById("type_operation");
     const clientDestination = document.getElementById("client_destination");
+    const btnAdd = document.getElementById("btn-add");
 
     if (!typeOperation || !clientDestination) {
         return;
     }
 
     function verifierTypeOperation() {
+
         const isTransfer = typeOperation.value === "1";
+
         clientDestination.disabled = !isTransfer;
 
-        
         const div = document.getElementById("frais-container");
-        
+
         if (isTransfer) {
+
+            div.innerHTML = "";
+
             const libelle = document.createElement("label");
-            libelle.textContent = "Voulez vous inclure les frais de transfert ?";
-            
-            const yesLabel = document.createElement("label");
-            yesLabel.textContent = "Oui";
+            libelle.textContent = "Voulez-vous inclure les frais de transfert ?";
+
             const yesInput = document.createElement("input");
             yesInput.type = "radio";
             yesInput.name = "frais";
             yesInput.value = "1";
-            
-            const noLabel = document.createElement("label");
-            noLabel.textContent = "Non";
+
+            const yesLabel = document.createElement("label");
+            yesLabel.appendChild(yesInput);
+            yesLabel.append(" Oui ");
+
             const noInput = document.createElement("input");
             noInput.type = "radio";
             noInput.name = "frais";
             noInput.value = "0";
-            
-            const br = document.createElement("br");
+            noInput.checked = true;
 
-            div.innerHTML = "";
+            const noLabel = document.createElement("label");
+            noLabel.appendChild(noInput);
+            noLabel.append(" Non");
+
             div.appendChild(libelle);
+            div.appendChild(document.createElement("br"));
             div.appendChild(yesLabel);
-            div.appendChild(yesInput);
-            div.appendChild(br);
             div.appendChild(noLabel);
-            div.appendChild(noInput);
-        } else {
-            div.innerHTML = "";
-        }
 
-        if (!isTransfer) {
-            clientDestination.value = "";
-        }
+            document.querySelectorAll('input[name="frais"]').forEach(radio => {
 
-        document.querySelectorAll('input[name="frais"]').forEach(radio => {
-            radio.addEventListener('change', function() {
+                radio.addEventListener("change", function () {
 
-                if (this.value === "1") {
+                    if (this.value === "1") {
 
-                    const montant = document.getElementById("montant").value;
+                        const montant = document.getElementById("montant").value;
 
-                    fetch(`transaction/montant-a-payer?montant=${encodeURIComponent(montant)}&type_operation=${encodeURIComponent(typeOperation.value)}&numero=${encodeURIComponent(document.getElementById("client_destination").value)}`)
+                        fetch(
+                            `transaction/montant-a-payer?montant=${encodeURIComponent(montant)}&type_operation_id=${encodeURIComponent(typeOperation.value)}&numero=${encodeURIComponent(clientDestination.value)}`
+                        )
                         .then(response => response.json())
                         .then(data => {
-                            console.log(data);
 
                             document.getElementById("montant-a-payer").textContent =
                                 "Montant à payer : " + data.montant_a_payer;
-                            
-                                // const btnSubmit = document.getElementById("btn-submit");
-                                // if (Number(data.montant_a_payer) > Number(montant)) {
-                                //     btnSubmit.disabled = true;
-                                // } else {
-                                //     btnSubmit.disabled = false;
-                                // }
+
                         });
-                }
+
+                    } else {
+
+                        document.getElementById("montant-a-payer").textContent = "";
+
+                    }
+
+                });
 
             });
-        });
+
+        } else {
+
+            div.innerHTML = "";
+            clientDestination.value = "";
+            document.getElementById("montant-a-payer").textContent = "";
+
+        }
     }
 
     verifierTypeOperation();
+
     typeOperation.addEventListener("change", verifierTypeOperation);
+
+    if (btnAdd) {
+        btnAdd.addEventListener("click", addDestinationRow);
+        btnAdd.addEventListener("click", function () {
+            const destinationField = document.getElementById("client_destination");
+            destinationField.disabled = true;
+        });
+    }
+
 });

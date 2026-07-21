@@ -29,9 +29,14 @@
                 </div>
 
                 <div class="mm-field">
+                    <h5>Envoie à un simple destinataire:</h5>
                     <label for="client_destination">Compte destinataire</label>
                     <input type="text" name="compte_destination" id="client_destination" disabled>
                 </div>
+                
+                <div class="mm-field" id="destination-field"></div>
+                
+                <button type="button" id="btn-add">+</button>
 
                 <div id="frais-container"></div>
 
