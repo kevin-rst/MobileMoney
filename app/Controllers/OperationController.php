@@ -181,6 +181,9 @@ class OperationController extends BaseController
 
                 $montant = $shareAmount;
                 if ($include_frais == 0) {
+                    if ($montant < $fraisRetrait['frais']) {
+                        return redirect()->back()->withInput()->with('error', 'Le montant pour le numéro ' . $recipientNumero . ' est inférieur aux frais de retrait.');
+                    }
                     $montant -= $fraisRetrait['frais'];
                 }
 
