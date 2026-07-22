@@ -203,6 +203,8 @@ class OperationController extends BaseController
                     $montant -= $fraisRetrait['frais'];
                 }
 
+                $totalNeeded += $montant + $frais['frais'] + $commissionAmount + $fraisRetrait['frais'];
+                
                 $recipientData[] = [
                     'numero' => $recipientNumero,
                     'compte_destination' => $compteDestinationItem,
@@ -210,10 +212,10 @@ class OperationController extends BaseController
                     'frais' => $frais['frais'],
                     'frais_retrait' => $fraisRetrait['frais'],
                     'commission' => $commissionAmount,
-                    'montant_epargne' => $montant*$epargne['pct_epargne'],
+                    'montant_epargne' => $totalNeeded*$epargne['pct_epargne'],
+                    'total_needed' => $totalNeeded,
                 ];
 
-                $totalNeeded += $montant + $frais['frais'] + $commissionAmount;
             }
 
             if ($compteSource['solde'] < $totalNeeded) {
@@ -223,17 +225,22 @@ class OperationController extends BaseController
             foreach ($recipientData as $detail) {
                 $updatedSourceBalance = $compteSource['solde'] - $detail['montant'] - $detail['frais'] - $detail['frais_retrait'] - $detail['commission'];
                 $updatedDestinationBalance = $detail['compte_destination']['solde'] + $detail['montant'] - $detail['montant_epargne'] + $detail['frais_retrait'];
+                
                 $compte_epargne = $compteEpargneModel->findByIdCompte($detail['compte_destination']['id']);
+                $updatedDestinationCompteEpargne = $compte_epargne['solde_epargne'] + $detail['montant_epargne'];
+
+                dd($updatedDestinationCompteEpargne);
 
                 $compteModel->update($compteSource['id'], ['solde' => $updatedSourceBalance]);
                 $compteModel->update($detail['compte_destination']['id'], ['solde' => $updatedDestinationBalance]);
 
-                $data_epargne = [
-                    'solde_epargne' => $detail['montant_epargne'],
-                    'compte_id' => $compte_epargne['id'],
-                ];
+                // $data_epargne = [
+                //     'solde_epargne' => $detail['montant_epargne'],
+                //     'compte_id' => $compte_epargne['compte_id'],
+                // ];
 
-                $compteEpargneModel->insert($data_epargne);
+                // $compteEpargneModel->insert($data_epargne);
+                $compteEpargneModel->update($compte_epargne['compte_id'], ['solde_epargne' => $updatedDestinationCompteEpargne]);
 
                 $compteSource['solde'] = $updatedSourceBalance;
                 $detail['compte_destination']['solde'] = $updatedDestinationBalance;
